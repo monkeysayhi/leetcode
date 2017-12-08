@@ -19,7 +19,7 @@ class Solution {
     for (int i = 0; i + needle.length() <= haystack.length(); i++) {
       boolean eq = true;
       for (int j = 0; j < needle.length(); j++) {
-        if (haystack.charAt(i+j) != needle.charAt(j)) {
+        if (haystack.charAt(i + j) != needle.charAt(j)) {
           eq = false;
           break;
         }
