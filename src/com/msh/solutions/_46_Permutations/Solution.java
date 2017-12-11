@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by monkeysayhi on 2017/12/8.
+ * Created by monkeysayhi on 2017/12/10.
  */
 class Solution {
   // 不可重集的排列, 回溯

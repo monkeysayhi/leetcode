@@ -3,7 +3,7 @@ package com.msh.solutions._47_Permutations_2;
 import java.util.*;
 
 /**
- * Created by monkeysayhi on 2017/12/8.
+ * Created by monkeysayhi on 2017/12/10.
  */
 class Solution {
   // 可重集的排列, 回溯
