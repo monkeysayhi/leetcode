@@ -3,7 +3,7 @@ package com.msh.solutions._74_Search_a_2D_Matrix;
 /**
  * Created by monkeysayhi on 2017/12/13.
  */
-class Solution {
+public class Solution {
   // 二分
   public boolean searchMatrix(int[][] matrix, int target) {
     int[][] mat = matrix;

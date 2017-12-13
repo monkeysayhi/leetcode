@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by monkeysayhi on 2017/12/10.
  */
-class Solution {
+public class Solution {
   // 可重集的排列, 回溯
   public List<List<Integer>> permuteUnique(int[] nums) {
     if (nums == null) {

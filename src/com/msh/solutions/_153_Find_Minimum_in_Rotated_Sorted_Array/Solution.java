@@ -3,7 +3,7 @@ package com.msh.solutions._153_Find_Minimum_in_Rotated_Sorted_Array;
 /**
  * Created by monkeysayhi on 2017/12/13.
  */
-class Solution {
+public class Solution {
   // 二分，收敛到“小于等于 nums[-1] 的第一个元素”
   // 假设数组是旋转的，则v必须取 nums[-1]，而不能取 nums[0]。取 nums[0] 无法定义收敛规则。
   public int findMin(int[] nums) {

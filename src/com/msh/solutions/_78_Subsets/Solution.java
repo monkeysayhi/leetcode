@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by monkeysayhi on 2017/12/11.
  */
-class Solution {
+public class Solution {
   // 不可重集的子集，回溯
   public List<List<Integer>> subsets(int[] nums) {
     if (nums == null) {

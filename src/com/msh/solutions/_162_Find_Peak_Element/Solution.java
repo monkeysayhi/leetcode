@@ -3,7 +3,7 @@ package com.msh.solutions._162_Find_Peak_Element;
 /**
  * Created by monkeysayhi on 2017/12/13.
  */
-class Solution {
+public class Solution {
   // 二分，对于区间 [l, m, r]，朝着 max{m, m+1} 的方向收敛
   public int findPeakElement(int[] nums) {
     // no edge

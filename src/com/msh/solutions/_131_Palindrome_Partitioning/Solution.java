@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by monkeysayhi on 2017/12/12.
  */
-class Solution {
+public class Solution {
   // 枚举所有结果，回溯法。
   // 回溯：vis记录划分位置
   // 判断子串是回文串：暴力

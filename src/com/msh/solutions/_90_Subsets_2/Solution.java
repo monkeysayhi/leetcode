@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by monkeysayhi on 2017/12/11.
  */
-class Solution {
+public class Solution {
   // 可重集的子集，回溯
   public List<List<Integer>> subsetsWithDup(int[] nums) {
     if (nums == null) {

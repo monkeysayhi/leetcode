@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by monkeysayhi on 2017/12/10.
  */
-class Solution {
+public class Solution {
   // 不可重集的排列, 回溯
   public List<List<Integer>> permute(int[] nums) {
     if (nums == null) {

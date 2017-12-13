@@ -3,7 +3,7 @@ package com.msh.solutions._28_Implement_strStr_;
 /**
  * Created by monkeysayhi on 2017/12/8.
  */
-class Solution {
+public class Solution {
   // 暴力, O(m * n)
   public int strStr(String haystack, String needle) {
     if (haystack == null || needle == null) {

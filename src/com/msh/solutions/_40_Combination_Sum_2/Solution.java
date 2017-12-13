@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by monkeysayhi on 2017/12/12.
  */
-class Solution {
+public class Solution {
   public List<List<Integer>> combinationSum2(int[] candidates, int target) {
     int[] nums = candidates;
     if (nums == null) {
