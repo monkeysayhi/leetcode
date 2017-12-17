@@ -5,6 +5,7 @@ import java.util.Stack;
 /**
  * Created by monkeysayhi on 2017/12/15.
  */
+//http://www.lintcode.com/en/problem/lowest-common-ancestor-iii/
 
 // 两节点可能不在树中，节点也没有 parent 域
 public class FollowUp2 {

@@ -3,6 +3,7 @@ package com.msh.solutions._236_Lowest_Common_Ancestor_of_a_Binary_Tree;
 /**
  * Created by monkeysayhi on 2017/12/15.
  */
+// http://www.lintcode.com/en/problem/lowest-common-ancestor-ii/
 class ParentTreeNode {
   public ParentTreeNode parent, left, right;
 }
