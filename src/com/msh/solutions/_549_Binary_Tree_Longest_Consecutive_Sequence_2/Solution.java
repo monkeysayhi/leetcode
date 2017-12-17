@@ -73,19 +73,21 @@ public class Solution {
           rightRs.maxLen);
     }
 
-    int combineLen = 1;
+    int maxCombineLen = 1;
+    int curCombineLen = 1;
     if (leftRs != null && rightRs != null) {
       if (root.val + 1 == root.left.val
           && root.val - 1 == root.right.val) {
-        combineLen = 1 + leftRs.curDownLen + rightRs.curUpLen;
+        curCombineLen = 1 + leftRs.curDownLen + rightRs.curUpLen;
       } else if (root.val - 1 == root.left.val
           && root.val + 1 == root.right.val) {
-        combineLen = 1 + leftRs.curUpLen + rightRs.curDownLen;
+        curCombineLen = 1 + leftRs.curUpLen + rightRs.curDownLen;
       }
+      maxCombineLen = curCombineLen;
     }
 
     int maxLen = Math.max(Math.max(maxLenL, maxLenR),
-        combineLen);
+        maxCombineLen);
     int curUpLen = Math.max(curUpLenL, curUpLenR);
     int curDownLen = Math.max(curDownLenL, curDownLenR);
 
