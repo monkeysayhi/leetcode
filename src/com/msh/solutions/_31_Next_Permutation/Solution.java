@@ -7,7 +7,6 @@ import java.util.Map;
 /**
  * Created by monkeysayhi on 2017/12/11.
  */
-// 快速生成下一个排列
 public class Solution {
 
   private enum State {
