@@ -14,7 +14,7 @@ class ListNode {
 }
 
 public class Solution {
-  // 模拟 + dummy
+  // 反转 + dummy
   public ListNode swapPairs(ListNode head) {
     if (head == null || head.next == null) {
       return head;
@@ -22,24 +22,32 @@ public class Solution {
 
     ListNode dummy = new ListNode(0);
     dummy.next = head;
-    ListNode pair = dummy;
-    while (pair.next != null && pair.next.next != null) {
-      ListNode subHeadPrev = pair;
-      ListNode subTail = pair.next;
-      ListNode prev = null;
-      ListNode cur = pair.next;
-      for (int i = 0; i < 2; i++) {
-        ListNode next = cur.next;
-        cur.next = prev;
-        prev = cur;
-        cur = next;
-      }
-      ListNode subHead = prev;
-      ListNode subTailNext = cur;
-      subHeadPrev.next = subHead;
-      subTail.next = subTailNext;
-      pair = subTail;
+    ListNode lastTail = dummy;
+    while (lastTail.next != null) {
+      ListNode[] subList = reverse(lastTail, 2);
+      lastTail = subList[1];
     }
     return dummy.next;
+  }
+
+  private ListNode[] reverse(ListNode headPrev, int len) {
+    assert headPrev != null && headPrev.next != null;
+    ListNode head = headPrev.next;
+
+    ListNode subHeadPrev = headPrev;
+    ListNode subTail = head;
+    ListNode prev = null;
+    ListNode cur = head;
+    for (int i = 0; i < len && cur != null; i++) {
+      ListNode next = cur.next;
+      cur.next = prev;
+      prev = cur;
+      cur = next;
+    }
+    ListNode subHead = prev;
+    ListNode subTailNext = cur;
+    subHeadPrev.next = subHead;
+    subTail.next = subTailNext;
+    return new ListNode[]{subHead, subTail};
   }
 }
