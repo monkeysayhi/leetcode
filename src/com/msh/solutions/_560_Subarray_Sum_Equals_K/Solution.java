@@ -1,5 +1,8 @@
 package com.msh.solutions._560_Subarray_Sum_Equals_K;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by monkeysayhi on 2018/1/4.
  */
