@@ -7,8 +7,7 @@ import java.util.List;
  * Created by monkeysayhi on 2017/12/12.
  */
 public class Solution {
-  // 枚举所有结果，回溯法。
-  // 回溯：vis记录划分位置
+  // 枚举回文子串，用vis记录划分位置
   // 判断子串是回文串：暴力
   public List<List<String>> partition(String s) {
     if (s == null) {
