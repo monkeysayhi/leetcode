@@ -9,8 +9,7 @@ import java.util.Stack;
  * Created by monkeysayhi on 2017/12/12.
  */
 public class Solution {
-  // 枚举所有可能，回溯
-  // 每次只需要尝试大于等于自己的元素
+  // 枚举加法式，不使用vis，直接枚举大于等于自己的元素
   public List<List<Integer>> combinationSum(int[] candidates, int target) {
     int[] nums = candidates;
     if (nums == null) {
