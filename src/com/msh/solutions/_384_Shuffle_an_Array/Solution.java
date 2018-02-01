@@ -1,6 +1,7 @@
 package com.msh.solutions._384_Shuffle_an_Array;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Created by monkeysayhi on 2018/1/30.
@@ -8,6 +9,8 @@ import java.util.Arrays;
 // 重点是shuffle的实现，详见注释，看如何通过swap代替remove，将时间从O(n^2)降到O(n)
 public class Solution {
   private int[] origin;
+
+  private Random random = new Random();
 
   public Solution(int[] nums) {
     this.origin = Arrays.copyOf(nums, nums.length);
@@ -27,7 +30,7 @@ public class Solution {
   public int[] shuffle() {
     int[] shuffle = Arrays.copyOf(origin, origin.length);
     for (int i = 0; i < shuffle.length; i++) {
-      int randomIndex = i + (int) (Math.random() * (shuffle.length - i));
+      int randomIndex = i + random.nextInt(shuffle.length - i);
       swap(shuffle, i, randomIndex);
     }
     return shuffle;
