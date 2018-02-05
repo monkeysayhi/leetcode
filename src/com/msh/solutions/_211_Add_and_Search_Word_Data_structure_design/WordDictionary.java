@@ -1,7 +1,8 @@
 package com.msh.solutions._211_Add_and_Search_Word_Data_structure_design;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,8 +32,10 @@ public class WordDictionary {
       return children.size();
     }
 
-    private Collection<Node> getChildren() {
-      return children.values();
+    private List<Node> getChildren() {
+      List<Node> rs = new ArrayList<>();
+      rs.addAll(children.values());
+      return rs;
     }
 
     private boolean hasChild(char ch) {
