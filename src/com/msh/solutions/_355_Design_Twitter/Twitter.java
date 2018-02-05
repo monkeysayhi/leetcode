@@ -6,11 +6,23 @@ import java.util.*;
  * Created by monkeysayhi on 2018/2/5.
  */
 // 实际应用中，根据不同的读写比例与资源供给，实现方式和性能表现都不同
-// 假设tweetId自增的，则不需要另外根据发布时间排序
+// 题目未明确，测试数据中的 tweetId 不是自增的，则需要另外根据发布时间排序；同时，时间粒度可能很小，用另外的 自增id 定序
 public class Twitter {
   // TODO refactor
-  private Map<Integer, List<Integer>> tweets;
+  private Map<Integer, List<Tweet>> tweets;
   private Map<Integer, Set<Integer>> relations;
+
+  private static class Tweet {
+    private final int contentId;
+    private final long postId;
+
+    private static long autoIncrementalPostId = -1;
+
+    private Tweet(int contentId) {
+      this.contentId = contentId;
+      postId = ++autoIncrementalPostId;
+    }
+  }
 
   /**
    * Initialize your data structure here.
@@ -26,14 +38,8 @@ public class Twitter {
    */
   public void postTweet(int userId, int tweetId) {
     registerIfNotExist(userId);
-    List<Integer> tweetsOfOne = tweets.get(userId);
-    // 放弃过期的tweet
-    if (tweetsOfOne.size() > 0
-        && tweetId <= tweetsOfOne.get(tweetsOfOne.size() - 1)) {
-      return;
-    }
-    // TODO 放弃 post 已存在的twwet
-    tweetsOfOne.add(tweetId);
+    // TODO 放弃 post 已存在的 tweet
+    tweets.get(userId).add(new Tweet(tweetId));
   }
 
   /**
@@ -46,20 +52,30 @@ public class Twitter {
     // TODO opt
     Set<Integer> users = new HashSet<>(relations.get(userId));
     users.add(userId);
-    List<Integer> wholeRecent = new ArrayList<>(10 * (users.size()));
+    List<Tweet> wholeRecent = new ArrayList<>(10 * (users.size()));
     for (int tmpUserId : users) {
-      List<Integer> tweetsOfOne = tweets.get(tmpUserId);
+      List<Tweet> tweetsOfOne = tweets.get(tmpUserId);
       for (int i = tweetsOfOne.size() - 1; i >= 0; i--) {
         wholeRecent.add(tweetsOfOne.get(i));
       }
     }
-    Collections.sort(wholeRecent, Collections.reverseOrder());
+    Collections.sort(wholeRecent, new Comparator<Tweet>() {
+      public int compare(Tweet t1, Tweet t2) {
+        if (t2.postId > t1.postId) {
+          return 1;
+        }
+        if (t2.postId < t1.postId) {
+          return -1;
+        }
+        return 0;
+      }
+    });
 
     // TODO refactor
     int tweetCnt = Math.min(10, wholeRecent.size());
     List<Integer> recent = new ArrayList<>(tweetCnt);
     for (int i = 0; i < tweetCnt; i++) {
-      recent.add(wholeRecent.get(i));
+      recent.add(wholeRecent.get(i).contentId);
     }
     return recent;
   }
@@ -88,7 +104,7 @@ public class Twitter {
     // 题目没提供注册接口。这里假设用户第一次使用tweet时自动注册
     if (!tweets.containsKey(userId)) {
       // TODO opt
-      tweets.put(userId, new ArrayList<Integer>());
+      tweets.put(userId, new ArrayList<Tweet>());
       relations.put(userId, new HashSet<Integer>());
     }
   }
