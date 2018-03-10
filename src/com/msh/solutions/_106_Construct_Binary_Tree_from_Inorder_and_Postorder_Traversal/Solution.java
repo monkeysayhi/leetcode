@@ -15,6 +15,7 @@ class TreeNode {
 }
 
 public class Solution {
+  // 后序序列的最后一个节点是root，中序序列中root两侧的子序列为左、右子树
   // 1. 后序序列的最后一个节点是根节点，不妨设为 root
   // 2. 在中序序列中找到 root，root 左侧的子序列 left 是左子树的中序序列，右侧同理
   // 3. 设 left 中节点的数量为 n，则后序序列的前n节点构造左子树的后序序列；如果 n == 0，则左子树为 null
