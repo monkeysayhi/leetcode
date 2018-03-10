@@ -24,25 +24,25 @@ public class Solution {
           eq++;
           gt++;
         } else if (lt == eq && eq < gt) {
+          swap(nums, lt + 1, cur);
           lt++;
           eq++;
           gt++;
-          swap(nums, lt, cur);
         } else {
+          swap(nums, lt + 1, cur);
+          swap(nums, eq + 1, cur);
           lt++;
           eq++;
           gt++;
-          swap(nums, lt, cur);
-          swap(nums, eq, cur);
         }
       } else if (nums[cur] == key) {
         if (eq == gt) {
           eq++;
           gt++;
         } else {
+          swap(nums, eq + 1, cur);
           eq++;
           gt++;
-          swap(nums, eq, cur);
         }
       } else {
         gt++;
