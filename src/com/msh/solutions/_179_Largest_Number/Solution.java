@@ -30,17 +30,7 @@ public class Solution {
         if (s2.equals("0")) {
           return -1;
         }
-        return cmp(s1 + s2, s2 + s1);
-      }
-
-      private int cmp(String s1, String s2) {
-        for (int i = 0; i < s1.length(); i++) {
-          int diff = s2.charAt(i) - s1.charAt(i);
-          if (diff != 0) {
-            return diff;
-          }
-        }
-        return 0;
+        return (s2 + s1).compareTo(s1 + s2);
       }
     });
 
