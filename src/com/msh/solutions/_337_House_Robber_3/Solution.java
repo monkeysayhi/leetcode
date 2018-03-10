@@ -27,10 +27,10 @@ public class Solution {
   }
 
   // solution 2: 注意到，动规的时候，当前节点的状态仅与孩子节点相关，则可以进一步简化为分治
+  // Result(maxRob, maxNRob)，Result.max = max{maxRob, maxNRob}
   // 设dpRob[root]为抢劫节点root后的最大钱数，dpNRob[root]为不抢劫节点root后的最大钱数
   // dpRob[root] = 两个孩子都不抢
-  // dpNRob[root] = max{dpRob[root.left], dpNRob[root.left]} + max{dpRob[root.right], dpNRob[root
-  // .right]}
+  // dpNRob[root] = max{dpRob[root.left], dpNRob[root.left]} + max{dpRob[root.right], dpNRob[root.right]}
   public int rob(TreeNode root) {
     if (root == null) {
       return 0;
@@ -57,7 +57,7 @@ public class Solution {
 //     // solution 1: 最优化，求最大，多状态动规
 //     // 设dpRob[root]为抢劫节点root后的最大钱数，dpNRob[root]为不抢劫节点root后的最大钱数
 //     // dpRob[root] = 两个孩子都不抢
-//     // dpNRob[root] = max{两个孩子都不抢, 两个孩子都抢, 一个抢一个不抢}
+//     // dpNRob[root] = max{dpRob[root.left], dpNRob[root.left]} + max{dpRob[root.right], dpNRob[root.right]}
 //     // 记忆化搜索更好写
 //     public int rob(TreeNode root) {
 //         if (root == null) {
@@ -76,40 +76,23 @@ public class Solution {
 //             return;
 //         }
 
+//         if (dpRob.containsKey(root)) {
+//             assert dpNRob.containsKey(root);
+//             return;
+//         }
+
 //         robInTree(dpRob, dpNRob, root.left);
 //         robInTree(dpRob, dpNRob, root.right);
 
-//         if (!dpRob.containsKey(root)) {
-//             int maxRob = 0;
-//             if (root.left != null && root.right != null) {
-//                 maxRob = root.val + dpNRob.get(root.left) + dpNRob.get(root.right);
-//             } else if (root.left != null && root.right == null) {
-//                 maxRob = root.val + dpNRob.get(root.left);
-//             } else if (root.left == null && root.right != null) {
-//                 maxRob = root.val + dpNRob.get(root.right);
-//             } else {
-//                 maxRob = root.val;
-//             }
-//             dpRob.put(root, maxRob);
-//         }
+//         int maxRob = root.val;
+//         maxRob += root.left == null ? 0 : dpNRob.get(root.left);
+//         maxRob += root.right == null ? 0 : dpNRob.get(root.right);
+//         dpRob.put(root, maxRob);
 
-//         if (!dpNRob.containsKey(root)) {
-//             int maxNRob = 0;
-//             if (root.left != null && root.right != null) {
-//                 maxNRob = Math.max(maxNRob, dpNRob.get(root.left) + dpNRob.get(root.right));
-//                 maxNRob = Math.max(maxNRob, dpRob.get(root.left) + dpRob.get(root.right));
-//                 maxNRob = Math.max(maxNRob, dpNRob.get(root.left) + dpRob.get(root.right));
-//                 maxNRob = Math.max(maxNRob, dpRob.get(root.left) + dpNRob.get(root.right));
-//             } else if (root.left != null && root.right == null) {
-//                 maxNRob = Math.max(maxNRob, dpNRob.get(root.left));
-//                 maxNRob = Math.max(maxNRob, dpRob.get(root.left));
-//             } else if (root.left == null && root.right != null) {
-//                 maxNRob = Math.max(maxNRob, dpNRob.get(root.right));
-//                 maxNRob = Math.max(maxNRob, dpRob.get(root.right));
-//             } else {
-//                 maxNRob = 0;
-//             }
-//             dpNRob.put(root, maxNRob);
-//         }
+//         int maxNRob = 0;
+//         maxNRob += root.left == null ? 0 : Math.max(dpRob.get(root.left), dpNRob.get(root.left));
+//         maxNRob += root.right == null ? 0 : Math.max(dpRob.get(root.right), dpNRob.get(root.right));
+//         dpNRob.put(root, maxNRob);
 //     }
+}
 }
