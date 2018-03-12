@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class Solution {
   // 枚举小括号表达式：利用了都是小括号的特点，回溯时只要先放左括号，再放右括号，且左括号的总数量与右括号相等，表达式就一定是匹配的
+  // 放右括号时必须保证`leftP > rightP`，因为一对括号一定是先出现左括号、后出现右括号，所以，从左到右枚举的话，一定满足`leftP >= rightP`
   public List<String> generateParenthesis(int n) {
     if (n == 0) {
       return new ArrayList<>();
