@@ -6,7 +6,7 @@ import java.util.Comparator;
 /**
  * Created by monkeysayhi on 2017/12/29.
  */
-// solution 2, 排序，从两头收缩。时间O(nlogn)，空间O(1)
+// solution 2, 排序，从两头收缩。时间O(nlogn)，空间O(n)
 public class FollowUp1 {
   private static class Info {
     private int val;
