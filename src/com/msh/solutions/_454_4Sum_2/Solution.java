@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class Solution {
   // 暴力：在四个list上枚举，O(n^4)
-  // 些微优化：在三个list上枚举，二分查找另一个list
+  // 些微优化：在三个list上枚举，二分查找另一个list，O(n^3logn)
   // 继续优化：在各两个list上枚举预先计算出各种和的方案数，然后求 sum{A X B} + sum{C X D} = 0 的方案数，O(n^2)
   // 整体的优化思路是将子问题平均摊分开
   // 除此之外，本身使用 Java HashMap 的实现也有成本，可以去掉一个map，直接在枚举C、D的时候统计数量

@@ -7,8 +7,10 @@ import java.util.Map;
  * Created by monkeysayhi on 2018/1/4.
  */
 public class Solution {
-  // 记录截止到每一位的sum的频数，当遇到新的一位sums[i]时，判断数组sums[...i - 1]中sums[i] - k出现的次数
-  // 利用了sum生成的顺序，使得找到的sums[j] = sums[i] - k, j 一定小于 i
+  // solution 1: 暴力：枚举i,j，计算子数组和，O(n^3)
+  // solution 2: 先计算preSum，再枚举i,j直接判断，O(n^2)
+  // solution 3: 继续优化：先计算preSum，然后统计preSum出现的索引位置，再枚举preSum[i]，并查找其后是否存在preSum[j] == preSum[i] + k；可边枚举边倒序统计，这样直接判断索引位数即可；实际上不需要索引位置，知道数量即可，那么可改为倒序统计频数。还可以枚举preSum[j]，查找其后是否存在preSum[i] == preSum[j] - k，这样正序枚举正序统计即可。 O(n)
+  // 下面是正序统计的实现
   public int subarraySum(int[] nums, int k) {
     if (nums == null || nums.length == 0) {
       return 0;

@@ -6,8 +6,7 @@ import java.util.List;
  * Created by monkeysayhi on 2018/1/12.
  */
 public class Solution {
-  // solution 1: dp[i][j]为以第i层、第j个节点为根的子三角的最小路径和，dp[i][j] = min{dp[i + 1][j], dp[i + 1][j + 1]} +
-  // tri[i][j]
+  // solution 1: dp[i][j]为以第i层、第j个节点为根的子三角的最小路径和，dp[i][j] = tri[i][j] + min{dp[i + 1][j], dp[i + 1][j + 1]}
   // 空间O(n^2)
   public int minimumTotal(List<List<Integer>> triangle) {
     List<List<Integer>> tri = triangle;
@@ -21,7 +20,7 @@ public class Solution {
     }
     for (int i = rowCnt - 2; i >= 0; i--) {
       for (int j = 0; j < tri.get(i).size(); j++) {
-        dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + tri.get(i).get(j);
+        dp[i][j] = tri.get(i).get(j) + Math.min(dp[i + 1][j], dp[i + 1][j + 1]);
       }
     }
     return dp[0][0];
