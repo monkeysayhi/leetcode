@@ -7,7 +7,7 @@ import java.util.List;
  * Created by monkeysayhi on 2018/1/12.
  */
 public class Solution {
-  // follow up，神，时间O(nlogn)：暂时不要求掌握，详见[76. Longest Increasing Subsequence](http://www.lintcode.com/en/problem/longest-increasing-subsequence/)
+  // follow up，神，时间O(nlogn)：暂时不要求掌握，参考http://blog.csdn.net/shuangde800/article/details/7474903
   // 定义 minEndElems[i] 长度为 i 的 LIS 的中的最小末尾元素
   public int lengthOfLIS(int[] nums) {
     if (nums == null || nums.length == 0) {
@@ -47,7 +47,7 @@ public class Solution {
     return l;
   }
 
-//     // basic，动规，时间O(n^2)：dp[i]为以nums[i]结尾的LIS的长度，dp[i] = max{1, 1 + dp[j] | 1 <= j < i && nums[j] <= nums[i]}
+//     // basic，动规，时间O(n^2)：dp[i]为以nums[i]结尾的LIS的长度，dp[i] = max{1, 1 + dp[j] | 1 <= j < i && nums[j] < nums[i]}
 //     public int lengthOfLIS(int[] nums) {
 //         if (nums == null || nums.length == 0) {
 //             return 0;
