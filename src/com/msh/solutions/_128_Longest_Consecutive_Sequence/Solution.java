@@ -36,7 +36,6 @@ public class Solution {
         len++;
       }
       maxLen = Math.max(maxLen, len);
-      num += len;
     }
     return maxLen;
   }

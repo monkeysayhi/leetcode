@@ -14,7 +14,7 @@ public class Solution {
     }
   }
 
-  // 记录截止到每一位的最大值(>=0)与最小值(<=0)，当遇到新的一位时，比较选或不选哪个更优；同时维护curMax
+  // 动态规划，记录截止到每一位的最大值(>=0)与最小值(<=0)，当遇到新的一位时，比较选或不选哪个更优；同时维护curMax
   public int maxProduct(int[] nums) {
     assert nums != null && nums.length > 0;
     if (nums.length == 1) {
