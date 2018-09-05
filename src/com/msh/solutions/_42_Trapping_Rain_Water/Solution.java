@@ -13,22 +13,22 @@ public class Solution {
     int n = height.length;
     int[] volumes = new int[n];
     volumes[0] = 0;
-    int heighestIdx = 0;
     for (int i = 1; i < n; i++) {
       int lastHigherIdx = -1;
+      int lastHighestIdxLtI = -1;
       for (int j = i - 1; j >= 0; j--) {
-        if (height[j] >= height[i]) {
+        if (height[j] >= height[i] && lastHigherIdx == -1) {
           lastHigherIdx = j;
+          // test case 给的不好，这里不break会TLE
           break;
+        } else if (height[j] < height[i] && (lastHighestIdxLtI == -1 || height[j] > height[lastHighestIdxLtI])) {
+          lastHighestIdxLtI = j;
         }
       }
-      int lastIdx = Math.max(lastHigherIdx, heighestIdx);
+      int lastIdx = lastHigherIdx == -1 ? lastHighestIdxLtI : lastHigherIdx;
       volumes[i] = volumes[lastIdx] + (i - lastIdx - 1) * Math.min(height[lastIdx], height[i]);
       for (int j = lastIdx + 1; j < i; j++) {
         volumes[i] -= height[j];
-      }
-      if (height[i] > height[heighestIdx]) {
-        heighestIdx = i;
       }
     }
     return volumes[n - 1];
