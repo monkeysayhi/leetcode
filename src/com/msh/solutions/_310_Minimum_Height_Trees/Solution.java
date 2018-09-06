@@ -13,53 +13,41 @@ public class Solution {
     if (n == 0) {
       return new ArrayList<>();
     }
-    if (n == 1) {
-      return Arrays.asList(0);
-    }
-    if (n == 2) {
-      return Arrays.asList(0, 1);
-    }
-    Set<Integer>[] graph = constructGraph(n, edges);
-    int[] dgs = new int[n];
-    for (int[] edge : edges) {
-      dgs[edge[0]]++;
-      dgs[edge[1]]++;
+    if (n <= 2) {
+      return n == 1 ? Arrays.asList(0) : Arrays.asList(0, 1);
     }
 
-    Queue<Integer> queue = new LinkedList<>();
+    Set<Integer>[] graph = constructGraph(n, edges);
+
+    Queue<Integer> leaves = new LinkedList<>();
     for (int u = 0; u < n; u++) {
-      if (dgs[u] == 1) {
-        queue.offer(u);
+      if (graph[u].size() == 1) {
+        leaves.offer(u);
       }
     }
-    int leftNodesCnt = n;
-    while (!queue.isEmpty()) {
-      if (leftNodesCnt <= 2) {
-        break;
-      }
-      int curLevelSize = queue.size();
-      for (int i = 0; i < curLevelSize; i++) {
-        int u = queue.poll();
+
+    int leftCnt = n;
+    while (leftCnt > 2) {
+      int curLevelCnt = leaves.size();
+      for (int i = 0; i < curLevelCnt; i++) {
+        int u = leaves.poll();
+        leftCnt--;
         assert graph[u].size() == 1;
-        for (int v : graph[u]) {
-          graph[u].remove(v);
-          graph[v].remove(u);
-          dgs[u]--;
-          dgs[v]--;
-          if (dgs[v] == 1) {
-            queue.offer(v);
-          }
+        int v = new ArrayList<>(graph[u]).get(0);
+        graph[u].remove(v);
+        graph[v].remove(u);
+        if (graph[v].size() == 1) {
+          leaves.offer(v);
         }
       }
-      leftNodesCnt -= curLevelSize;
     }
-    return new ArrayList<>(queue);
+    return new ArrayList<>(leaves);
   }
 
-  private Set<Integer>[] constructGraph(int nodesCnt, int[][] edges) {
-    Set<Integer>[] graph = new Set[nodesCnt];
-    for (int u = 0; u < nodesCnt; u++) {
-      graph[u] = new HashSet<Integer>();
+  private Set<Integer>[] constructGraph(int n, int[][] edges) {
+    Set<Integer>[] graph = new Set[n];
+    for (int u = 0; u < n; u++) {
+      graph[u] = new HashSet<>();
     }
     for (int[] edge : edges) {
       int u = edge[0];
