@@ -10,7 +10,7 @@ public class Solution {
   // solution 1: 枚举(i, j)，判断|nums[i] - nums[j]|. O(n * k)
   // solution 2: 排序，枚举(nums[i], nums[j])，判断|i - j|. O(n * t) + O(nlogn)
   // 前两种solution能找到所有方案，但这里指要求判断能否，一般可放宽寻找的目标，来减少搜索范围
-  // solution 3: 看[题解](https://leetcode.com/problems/contains-duplicate-iii/discuss/61641/C++-using-set-(less-10-lines)-with-simple-explanation.). 维护一个长度k的窗口，从左向右滑动，使用TreeSet维护窗口有序，每次插入前查找大于等于 nums[j] - t，存在即解. O(nlogk)
+  // solution 3: 看[题解](https://leetcode.com/problems/contains-duplicate-iii/discuss/61641/C++-using-set-(less-10-lines)-with-simple-explanation.). 使用 TreeMap 维护一个大小不超过 k 、元素值的差小于 t 的有序窗口（并统计次数），每次加入新元素时 nums[j]，检查窗口中是否存在元素 nums[x] ，满足 nums[j] - t <= nums[x] <= nums[j] + t（实际上，可以用 TreeSet ，因为窗口内必然不存在相等的元素，否则窗口内部就找到了目标 pair），存在即解. O(nlogk)
   // solution 4: 看[题解](https://leetcode.com/problems/contains-duplicate-iii/discuss/61645/AC-O(N)-solution-in-Java-using-buckets-with-explanation). 按照 (t + 1) 将窗口内的值分到多个桶中，则对于新值nums[j]对应的桶bucket而言，差值不大于t的nums[i']一定位于bucket、bucket + 1、bucket - 1三者之一。画一下过程就明白了。
 
   // solution 4
