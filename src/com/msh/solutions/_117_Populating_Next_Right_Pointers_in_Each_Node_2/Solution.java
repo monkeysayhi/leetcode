@@ -16,7 +16,10 @@ class TreeLinkNode {
 
 public class Solution {
   // 注意：不相邻的堂兄弟的也要相连
-  // 根右左的dfs，保证左连右的时候，右面的叔伯节点已经串起来
+  // 分治不行
+  // 常量空间，所以也不能额外申请变量记录状态；节点定义的也没办法用来记录状态
+  // 因此，比较有可能在遍历的过程中处理
+  // solution 1: “根右左”的先序dfs，保证左连右的时候，右面的叔伯节点已经串起来
   public void connect(TreeLinkNode root) {
     if (root == null) {
       return;
@@ -25,32 +28,29 @@ public class Solution {
       return;
     }
 
-    if (root.left != null && root.right != null) {
-      root.left.next = root.right;
+    TreeLinkNode curChild = null;
+    if (root.right != null) {
+      curChild = root.right;
     }
-
-    TreeLinkNode nextRoot = root.next;
-    boolean existNextChild = false;
-    while (nextRoot != null) {
-      if (nextRoot.left != null || nextRoot.right != null) {
-        existNextChild = true;
-        break;
+    if (root.left != null) {
+      if (root.right != null) {
+        root.left.next = root.right;
+      } else {
+        curChild = root.left;
       }
+    }
+    assert curChild != null;
+
+    TreeLinkNode nextRoot = null;
+    nextRoot = root.next;
+    while (nextRoot != null && nextRoot.left == null && nextRoot.right == null) {
       nextRoot = nextRoot.next;
     }
-    if (existNextChild) {
-      TreeLinkNode child = root.right;
-      if (root.right == null) {
-        child = root.left;
-      }
-      TreeLinkNode nextChild = nextRoot.left;
-      if (nextRoot.left == null) {
-        nextChild = nextRoot.right;
-      }
-      child.next = nextChild;
+    if (nextRoot != null) {
+      TreeLinkNode nextChild = nextRoot.left != null ? nextRoot.left : nextRoot.right;
+      curChild.next = nextChild;
     }
 
-    // 注意此处的顺序！！！
     connect(root.right);
     connect(root.left);
   }
