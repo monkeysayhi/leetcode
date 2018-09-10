@@ -5,50 +5,55 @@ package com.msh.solutions._29_Divide_Two_Integers;
  */
 public class Solution {
   // 以2的次幂为底短除；为避免出现Integer.MIN_VALUE时的溢出问题，统一使用long。。。
-  // 标答没考虑除0的问题
   public int divide(int dividend, int divisor) {
-    if (divisor == 0) {
-      return Integer.MAX_VALUE;
-    }
+    // assume valid
     if (dividend == 0) {
       return 0;
     }
-    boolean isPositive = false;
-    if (dividend < 0 && divisor < 0 || dividend > 0 && divisor > 0) {
-      isPositive = true;
+    if (divisor == 1) {
+      return dividend;
     }
-    long dividendL = Math.abs((long) dividend);
-    long divisorL = Math.abs((long) divisor);
-    if (divisorL == 1) {
-      if (-dividendL == Integer.MIN_VALUE) {
-        return isPositive ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+    if (divisor == -1) {
+      if (dividend == Integer.MIN_VALUE) {
+        return Integer.MAX_VALUE;
       }
-      return (int) (isPositive ? dividendL : -dividendL);
+      return -dividend;
     }
-    if (dividendL < divisorL) {
+
+    boolean positive = (dividend > 0 && divisor > 0)
+        || (dividend < 0 && divisor < 0);
+    long ddL = Math.abs((long) dividend);
+    long dsL = Math.abs((long) divisor);
+
+    int rs = (int) divideInt(ddL, dsL);
+    return positive ? rs : -rs;
+  }
+
+  private long divideInt(long dd, long ds) {
+    if (dd < ds) {
       return 0;
     }
-    if (dividendL == divisorL) {
-      return isPositive ? 1 : -1;
+    if (dd == ds) {
+      return 1;
     }
 
-    int bitLen = 0;
-    while (divisorL << bitLen <= dividendL) {
-      if (divisorL << bitLen < 0) {
+    int startI = 0;
+    while (dd > (ds << startI)) {
+      startI++;
+    }
+    if (dd == (ds << startI)) {
+      return 1 << startI;
+    }
+    long rs = 0;
+    for (int i = startI - 1; i >= 0; i--) {
+      if (dd < ds) {
         break;
       }
-      bitLen++;
-    }
-    bitLen--;
-
-    int ans = 0;
-    while (dividendL > divisorL) {
-      while (divisorL << bitLen > dividendL) {
-        bitLen--;
+      if (dd > (ds << i)) {
+        rs = rs | (1 << i);
+        dd -= ds << i;
       }
-      ans += 1 << bitLen;
-      dividendL -= divisorL << bitLen;
     }
-    return isPositive ? ans : -ans;
+    return rs;
   }
 }
