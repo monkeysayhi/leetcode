@@ -1,8 +1,6 @@
 package com.msh.solutions._57_Insert_Interval;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -25,145 +23,93 @@ class Interval {
 }
 
 public class Solution {
-  // 线性扫描一遍，同时合并Interval
-
-  // 简化版，看[题解](https://leetcode.com/problems/insert-interval/discuss/21600/Short-java-code)
+  // 简洁，思路不复杂：在 intervals 上移动游标时，一定先碰到 newInterval 的左界，再碰到 newInterval 的右界，有相交就合并入 newInterval
   public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-    if (newInterval == null) {
-      return new ArrayList<>(intervals);
+    // assume valid
+    List<Interval> rs = new ArrayList<>(intervals.size() + 1);
+    if (intervals.size() == 0) {
+      rs.add(newInterval);
+      return rs;
     }
-    if (intervals == null || intervals.size() == 0) {
-      return Arrays.asList(newInterval);
-    }
-
-    List<Interval> rs = new LinkedList<>();
 
     boolean merged = false;
-    for (Interval interval : intervals) {
-      if (newInterval.end < interval.start) {
-        rs.add(newInterval);
-        merged = true;
-        rs.add(interval);
-      } else if (newInterval.start > interval.end) {
-        rs.add(interval);
-      } else {
-        newInterval.start = Math.min(newInterval.start, interval.start);
-        newInterval.end = Math.max(newInterval.end, interval.end);
+    for (Interval itv : intervals) {
+      if (itv.end < newInterval.start) {
+        rs.add(itv);
+      } else if (itv.start > newInterval.end) {
+        if (!merged) {
+          rs.add(newInterval);
+          merged = true;
+        }
+        rs.add(itv);
+      } else { // overlap with left or right
+        newInterval.start = Math.min(newInterval.start, itv.start);
+        newInterval.end = Math.max(newInterval.end, itv.end);
       }
     }
     if (!merged) {
       rs.add(newInterval);
     }
+
     return rs;
   }
 
-//     // 原版，复杂、易错、丑陋
+//     // 稍微麻烦，但思路十分清晰：找到 newInterval 应该插入的位置，[left, right]，合并
 //     public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-//         if (newInterval == null) {
-//             return intervals;
-//         }
-//         if (intervals == null || intervals.size() == 0) {
-//             return Arrays.asList(newInterval);
+//         // assume valid
+//         List<Interval> rs = new ArrayList<>();
+//         int n = intervals.size();
+//         if (n == 0) {
+//             rs.add(newInterval);
+//             return rs;
 //         }
 
-//         List<Interval> rs = new LinkedList<>();
-
-//         Interval mergedInterval = null;
-//         boolean merged = false;
-//         for (int i = 0; i < intervals.size(); i++) {
-//             Interval interval = intervals.get(i);
-//             if (merged) {
-//                 rs.add(interval);
-//                 continue;
+//         int left = -1;
+//         int right = -1;
+//         for (int i = 0; i < n; i++) {
+//             Interval itv = intervals.get(i);
+//             if (itv.start <= newInterval.start) {
+//                 left = i;
 //             }
-//             // branch-1
-//             if (newInterval.end < interval.start) {
-//                 if (mergedInterval != null) {
-//                     mergedInterval.end = newInterval.end;
-//                     rs.add(mergedInterval);
-//                     rs.add(interval);
-//                     merged = true;
-//                 } else {
-//                     mergedInterval = new Interval(newInterval.start, newInterval.end);
-//                     rs.add(mergedInterval);
-//                     rs.add(interval);
-//                     merged = true;
-//                 }
-//                 continue;
-//             }
-//             // branch-2
-//             if (newInterval.start < interval.start && newInterval.end >= interval.start &&
-// newInterval.end <= interval.end) {
-//                 if (mergedInterval != null) {
-//                     mergedInterval.end = interval.end;
-//                     rs.add(mergedInterval);
-//                     merged = true;
-//                 } else {
-//                     mergedInterval = new Interval(newInterval.start, interval.end);
-//                     rs.add(mergedInterval);
-//                     merged = true;
-//                 }
-//                 continue;
-//             }
-//             // branch-3
-//             if (newInterval.start <= interval.start && newInterval.end >= interval.end) {
-//                 if (mergedInterval != null) {
-//                     if (i == intervals.size() - 1) {
-//                         mergedInterval.end = newInterval.end;
-//                         rs.add(mergedInterval);
-//                         merged = true;
-//                     } else {
-//                         // waiting processed by branch-1 or branch-3
-//                     }
-//                 } else {
-//                     mergedInterval = new Interval(newInterval.start, Integer.MIN_VALUE);
-//                     if (i == intervals.size() - 1) {
-//                         mergedInterval.end = newInterval.end;
-//                         rs.add(mergedInterval);
-//                         merged = true;
-//                     } else {
-//                         // waiting processed by branch-1 or branch-3
-//                     }
-//                 }
-//                 continue;
-//             }
-//             // branch-4
-//             if (newInterval.start >= interval.start && newInterval.end <= interval.end) {
-//                 assert mergedInterval == null;
-//                 mergedInterval = new Interval(interval.start, interval.end);
-//                 rs.add(mergedInterval);
-//                 merged = true;
-//                 continue;
-//             }
-//             // branch-5
-//             if (newInterval.start >= interval.start && newInterval.start <= interval.end &&
-// newInterval.end > interval.end) {
-//                 assert mergedInterval == null;
-//                 mergedInterval = new Interval(interval.start, Integer.MIN_VALUE);
-//                 if (i == intervals.size() - 1) {
-//                     mergedInterval.end = newInterval.end;
-//                     rs.add(mergedInterval);
-//                     merged = true;
-//                 } else {
-//                     // waiting processed by branch-1 or branch-2
-//                 }
-//                 continue;
-//             }
-//             // branch-6
-//             if (newInterval.start > interval.end) {
-//                 assert mergedInterval == null;
-//                 if (i == intervals.size() - 1) {
-//                     mergedInterval = new Interval(newInterval.start, newInterval.end);
-//                     rs.add(interval);
-//                     rs.add(mergedInterval);
-//                     merged = true;
-//                 } else {
-//                     rs.add(interval);
-//                     // waiting processed by other branch
-//                 }
-//                 continue;
+//             if (right == -1 && itv.end >= newInterval.end) {
+//                 right = i;
 //             }
 //         }
+
+//         if (left == right) {
+//             if (left == -1) {
+//                 rs.add(newInterval);
+
+//             } else {
+//                 rs.addAll(intervals);
+//             }
+//             return rs;
+//         }
+//         if (left != -1) {
+//             for (int i = 0; i < left; i++) {
+//                 rs.add(intervals.get(i));
+//             }
+//             rs.add(intervals.get(left));
+//             tryMerge(rs, rs.get(rs.size() - 1), newInterval);
+//         } else {
+//             rs.add(newInterval);
+//         }
+//         if (right != -1) {
+//             tryMerge(rs, rs.get(rs.size() - 1), intervals.get(right));
+//             for (int i = right + 1; i < n; i++) {
+//                 rs.add(intervals.get(i));
+//             }
+//         }
+
 //         return rs;
+//     }
+
+//     private void tryMerge(List<Interval> rs, Interval itv1, Interval itv2) {
+//         if (itv1.end >= itv2.start) {
+//             itv1.start = Math.min(itv1.start, itv2.start);
+//             itv1.end = Math.max(itv1.end, itv2.end);
+//         } else {
+//             rs.add(itv2);
+//         }
 //     }
 }
