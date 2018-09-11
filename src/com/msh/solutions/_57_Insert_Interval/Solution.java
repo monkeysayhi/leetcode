@@ -23,7 +23,8 @@ class Interval {
 }
 
 public class Solution {
-  // 简洁，思路不复杂：在 intervals 上移动游标时，一定先碰到 newInterval 的左界，再碰到 newInterval 的右界，有相交就合并入 newInterval
+  // 简洁，思路不复杂
+  // solution 2: 在 intervals 上移动游标时，一定先碰到 newInterval 的左界，再碰到 newInterval 的右界，有相交就合并入 newInterval
   public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
     // assume valid
     List<Interval> rs = new ArrayList<>(intervals.size() + 1);
@@ -54,7 +55,8 @@ public class Solution {
     return rs;
   }
 
-//     // 稍微麻烦，但思路十分清晰：找到 newInterval 应该插入的位置，[left, right]，合并
+//     // 稍微麻烦，但思路十分清晰
+//     // solution 1: 找到 newInterval 应该插入的位置，[left, right]，合并
 //     public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
 //         // assume valid
 //         List<Interval> rs = new ArrayList<>();
