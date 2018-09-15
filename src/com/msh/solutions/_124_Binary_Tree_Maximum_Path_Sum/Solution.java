@@ -16,51 +16,35 @@ class TreeNode {
 }
 
 public class Solution {
-  private static class Result {
+  static class Result {
     private int max;
     private int cur;
-
-    Result(int max, int cur) {
+    private Result(int max, int cur) {
       this.max = max;
       this.cur = cur;
     }
   }
 
-  // 分治，Result(max, cur)，要考虑负数和0，因此，面临的决策会更多
+  // 分治，Result(max, cur)，注意负数和0
   public int maxPathSum(TreeNode root) {
-    if (root == null) {
-      return Integer.MIN_VALUE;
-    }
-    return dc(root).max;
+    return maxPathSumInt(root).max;
   }
 
-  private Result dc(TreeNode root) {
+  private Result maxPathSumInt(TreeNode root) {
     if (root == null) {
-      return null;
+      return new Result(Integer.MIN_VALUE, 0);
     }
+    Result lRs = maxPathSumInt(root.left);
+    Result rRs = maxPathSumInt(root.right);
 
-    Result leftRs = dc(root.left);
-    Result rightRs = dc(root.right);
-
-    int max = root.val;
     int cur = root.val;
-    if (leftRs != null && rightRs != null) {
-      max = Math.max(max, leftRs.cur + root.val + rightRs.cur);
-      max = Math.max(max, root.val + leftRs.cur);
-      max = Math.max(max, root.val + rightRs.cur);
-      max = Math.max(max, leftRs.max);
-      max = Math.max(max, rightRs.max);
-      cur = Math.max(cur, root.val + leftRs.cur);
-      cur = Math.max(cur, root.val + rightRs.cur);
-    } else if (leftRs != null) {
-      max = Math.max(max, root.val + leftRs.cur);
-      max = Math.max(max, leftRs.max);
-      cur = Math.max(cur, root.val + leftRs.cur);
-    } else if (rightRs != null) {
-      max = Math.max(max, root.val + rightRs.cur);
-      max = Math.max(max, rightRs.max);
-      cur = Math.max(cur, root.val + rightRs.cur);
-    }
+    int max = root.val;
+    cur = Math.max(cur, lRs.cur + root.val);
+    cur = Math.max(cur, root.val + rRs.cur);
+    max = Math.max(max, lRs.max);
+    max = Math.max(max, rRs.max);
+    max = Math.max(max, cur);
+    max = Math.max(max, lRs.cur + root.val + rRs.cur);
     return new Result(max, cur);
   }
 }
