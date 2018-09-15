@@ -14,30 +14,34 @@ class ListNode {
 }
 
 public class Solution {
-  // 链表partition
+  // 链表上的 partition。注意保持稳定
   public ListNode partition(ListNode head, int x) {
     if (head == null || head.next == null) {
       return head;
     }
+
     ListNode dummy = new ListNode(0);
     dummy.next = head;
+
     ListNode lt = dummy;
-    ListNode prev = dummy;
-    while (prev.next != null) {
-      ListNode cur = prev.next;
-      if (cur.val >= x) {
-        prev = prev.next;
-        continue;
-      }
-      if (lt == prev) {
-        lt = lt.next;
-        prev = prev.next;
+    ListNode ge = dummy;
+    ListNode cur = head;
+    while (cur != null) {
+      int val = cur.val;
+      if (val < x) {
+        if (lt == ge) {
+          lt = lt.next;
+          ge = ge.next;
+        } else {
+          ge.next = cur.next;
+          cur.next = lt.next;
+          lt.next = cur;
+          lt = lt.next;
+        }
       } else {
-        prev.next = cur.next;
-        cur.next = lt.next;
-        lt.next = cur;
-        lt = lt.next;
+        ge = ge.next;
       }
+      cur = ge.next;
     }
     return dummy.next;
   }
