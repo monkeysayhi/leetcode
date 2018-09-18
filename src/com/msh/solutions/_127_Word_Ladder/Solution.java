@@ -6,84 +6,109 @@ import java.util.*;
  * Created by monkeysayhi on 2017/12/26.
  */
 public class Solution {
-  // 相邻词为边，层序BFS，时间O(n^2)
+  // 相邻词为边，bfs层序遍历，时间O(n * k)
   public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-    String begin = beginWord;
-    String end = endWord;
-    List<String> words = wordList;
-    if (begin == null || end == null || words == null || words.size() == 0) {
-      return 0;
+    Set<String> words = new HashSet<>();
+    for (String w : wordList) {
+      if (!w.equals(beginWord)) {
+        words.add(w);
+      }
     }
-    if (!words.contains(end)) {
+    if (!words.contains(endWord)) {
       return 0;
     }
 
-    Map<String, Set<String>> graph = constructGraph(begin, words);
-    return bfsLevelorder(graph, begin, end);
-  }
+    Map<String, Set<String>> graph = contructGraph(beginWord, endWord, words);
 
-  private int bfsLevelorder(Map<String, Set<String>> graph,
-                            String begin, String end) {
-    Set<String> vis = new HashSet<>(graph.size());
-    Queue<String> que = new LinkedList<>();
+    Queue<String> q = new LinkedList<>();
+    Set<String> vis = new HashSet<>();
+    q.add(beginWord);
     int level = 1;
-    que.offer(begin);
-    while (!que.isEmpty()) {
-      int curLevelSize = que.size();
+    while (!q.isEmpty()) {
       level++;
+      int curLevelSize = q.size();
       for (int i = 0; i < curLevelSize; i++) {
-        String u = que.poll();
+        String u = q.poll();
         vis.add(u);
         for (String v : graph.get(u)) {
-          if (!vis.contains(v)) {
-            if (v.equals(end)) {
-              return level;
-            }
-            que.offer(v);
+          if (vis.contains(v)) {
+            continue;
+          }
+          if (v.equals(endWord)) {
+            return level;
+          }
+          q.offer(v);
+        }
+      }
+    }
+    return 0;
+  }
+
+  private Map<String, Set<String>> contructGraph(String b, String e, Set<String> words) {
+    Map<String, Set<String>> graph = new HashMap<>();
+
+    graph.put(b, new HashSet<>());
+    for (String w : words) {
+      graph.put(b, new HashSet<>());
+    }
+
+    // O(n * k)
+    for (String w : words) {
+      if (isNeighbor(b, w)) {
+        graph.get(b).add(w);
+      }
+    }
+
+    for (String w : words) {
+      graph.put(w, new HashSet<>());
+    }
+    // TLE, O(n^2 * k)
+    // for (String u : words) {
+    //     for (String v : words) {
+    //         if (isNeighbor(u, v)) {
+    //             if (!u.equals(e)) {
+    //                 graph.get(u).add(v);
+    //             }
+    //             graph.get(v).add(u);
+    //         }
+    //     }
+    // }
+    // AC, O(n * k * 26)
+    for (String u : words) {
+      if (u.equals(e)) {
+        continue;
+      }
+      for (int i = 0; i < u.length(); i++) {
+        char[] s = u.toCharArray();
+        for (char ch = 'a'; ch <= 'z'; ch++) {
+          if (ch == s[i]) {
+            continue;
+          }
+          s[i] = ch;
+          String v = new String(s);
+          if (words.contains(v)) {
+            graph.get(u).add(v);
           }
         }
       }
     }
-    System.out.println("2");
-    return 0;
-  }
 
-  private Map<String, Set<String>> constructGraph(String begin,
-                                                  List<String> words) {
-    Map<String, Set<String>> graph = new HashMap<>(words.size() + 1);
-    for (String word : words) {
-      graph.put(word, new HashSet<String>());
-    }
-    graph.put(begin, new HashSet<String>());
-
-    for (String w1 : words) {
-      for (String w2 : words) {
-        if (!w1.equals(w2) && isNeighbor(w1, w2)) {
-          graph.get(w1).add(w2);
-          graph.get(w2).add(w1);
-        }
-      }
-    }
-    for (String w2 : words) {
-      // 该题允许begin位于words中，但不算作相邻
-      if (!begin.equals(w2) && isNeighbor(begin, w2)) {
-        graph.get(begin).add(w2);
-      }
-    }
     return graph;
   }
 
-  private boolean isNeighbor(String w1, String w2) {
+  private boolean isNeighbor(String s1, String s2) {
+    if (s1.equals(s2)) {
+      return false;
+    }
     int diffCnt = 0;
-    for (int i = 0; i < w1.length(); i++) {
-      if (w1.charAt(i) != w2.charAt(i)) {
+    for (int i = 0; i < s1.length(); i++) {
+      if (s1.charAt(i) != s2.charAt(i)) {
         diffCnt++;
         if (diffCnt > 1) {
           return false;
         }
       }
     }
-    assert diffCnt == 1;
     return true;
   }
 }
