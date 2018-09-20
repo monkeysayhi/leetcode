@@ -7,25 +7,20 @@ public class Solution {
   // 模拟，corner case多
   // 题解错误，badcase："    -03242aaa"
   public int myAtoi(String str) {
-    if (str == null) {
+    if (str == null || str.length() == 0) {
       return 0;
     }
 
     char[] s = str.toCharArray();
     int i = 0;
 
-    // 前导空白符
-    for (; i < s.length; i++) {
-      if (s[i] != ' ') {
-        break;
-      }
-    }
-    if (i == s.length || !(s[i] == '+' || s[i] == '-' || isDigit(s[i]))) {
+    // ignore prefix
+    for (; i < s.length && s[i] == ' '; i++) {}
+    if (i == s.length) {
       return 0;
     }
-    assert i < s.length && (s[i] == '+' || s[i] == '-' || isDigit(s[i]));
 
-    // 正负号
+    // sign
     boolean positive = true;
     if (s[i] == '+') {
       i++;
@@ -33,19 +28,24 @@ public class Solution {
       positive = false;
       i++;
     }
+    if (i == s.length || !isDigit(s[i])) {
+      return 0;
+    }
 
-    // transfer && 后缀非数字符
+    // transfer + ignore suffix
+    // allow multi '0' before positive digit
     int rs = 0;
-    for (; i < s.length; i++) {
-      if (!isDigit(s[i])) {
-        break;
-      }
+    for (; i < s.length && isDigit(s[i]); i++) {
       int cur = s[i] - '0';
-      if (!positive && rs == -(Integer.MIN_VALUE / 10) && cur == 10 - Integer.MIN_VALUE % 10) {
+      if (!positive
+          && (rs > -(Integer.MIN_VALUE / 10)
+          || (rs == -(Integer.MIN_VALUE / 10) && cur >= -(Integer.MIN_VALUE % 10)))) {
         return Integer.MIN_VALUE;
       }
-      if (rs > Integer.MAX_VALUE / 10 || (rs == Integer.MAX_VALUE / 10 && cur > Integer.MAX_VALUE % 10)) {
-        return positive ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+      if (positive
+          && (rs > Integer.MAX_VALUE / 10
+          || (rs == Integer.MAX_VALUE / 10 && cur >= Integer.MAX_VALUE % 10))) {
+        return Integer.MAX_VALUE;
       }
       rs = rs * 10 + cur;
     }
