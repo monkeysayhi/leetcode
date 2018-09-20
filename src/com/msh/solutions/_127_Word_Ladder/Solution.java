@@ -6,109 +6,67 @@ import java.util.*;
  * Created by monkeysayhi on 2017/12/26.
  */
 public class Solution {
-  // 相邻词为边，bfs层序遍历，时间O(n * k)
+  // 相邻词为边，bfs 层序遍历
+  // 暴力建图O(n^2)，遍历O(n)，换个思路O(n)建图
   public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+    // assume valid
+    String b = beginWord;
+    String e = endWord;
     Set<String> words = new HashSet<>();
     for (String w : wordList) {
-      if (!w.equals(beginWord)) {
+      if (!w.equals(b)) {
         words.add(w);
       }
     }
-    if (!words.contains(endWord)) {
+    if (!words.contains(e)) {
       return 0;
     }
 
-    Map<String, Set<String>> graph = contructGraph(beginWord, endWord, words);
-
+    Map<String, Set<String>> g = constructGragh(b, e, words);
     Queue<String> q = new LinkedList<>();
     Set<String> vis = new HashSet<>();
-    q.add(beginWord);
+    q.offer(b);
+    vis.add(b);
     int level = 1;
     while (!q.isEmpty()) {
       level++;
       int curLevelSize = q.size();
       for (int i = 0; i < curLevelSize; i++) {
         String u = q.poll();
-        vis.add(u);
-        for (String v : graph.get(u)) {
-          if (vis.contains(v)) {
-            continue;
+        for (String v : g.get(u)) {
+          if (!vis.contains(v)) {
+            if (v.equals(e)) {
+              return level;
+            }
+            q.offer(v);
+            vis.add(v);
           }
-          if (v.equals(endWord)) {
-            return level;
-          }
-          q.offer(v);
         }
       }
     }
     return 0;
   }
 
-  private Map<String, Set<String>> contructGraph(String b, String e, Set<String> words) {
-    Map<String, Set<String>> graph = new HashMap<>();
+  private Map<String ,Set<String>> constructGragh(String b, String e, Set<String> words) {
+    Map<String, Set<String>> g = new HashMap<>();
+    Set<String> startWs = new HashSet<>(words);
+    startWs.remove(e);
+    startWs.add(b);
+    Set<String> endWs = new HashSet<>(words);
 
-    graph.put(b, new HashSet<>());
-    for (String w : words) {
-      graph.put(b, new HashSet<>());
-    }
-
-    // O(n * k)
-    for (String w : words) {
-      if (isNeighbor(b, w)) {
-        graph.get(b).add(w);
-      }
-    }
-
-    for (String w : words) {
-      graph.put(w, new HashSet<>());
-    }
-    // TLE, O(n^2 * k)
-    // for (String u : words) {
-    //     for (String v : words) {
-    //         if (isNeighbor(u, v)) {
-    //             if (!u.equals(e)) {
-    //                 graph.get(u).add(v);
-    //             }
-    //             graph.get(v).add(u);
-    //         }
-    //     }
-    // }
-    // AC, O(n * k * 26)
-    for (String u : words) {
-      if (u.equals(e)) {
-        continue;
-      }
+    for (String u : startWs) {
+      g.put(u, new HashSet<>());
       for (int i = 0; i < u.length(); i++) {
-        char[] s = u.toCharArray();
+        char[] chars = u.toCharArray();
         for (char ch = 'a'; ch <= 'z'; ch++) {
-          if (ch == s[i]) {
-            continue;
-          }
-          s[i] = ch;
-          String v = new String(s);
-          if (words.contains(v)) {
-            graph.get(u).add(v);
+          chars[i] = ch;
+          String v = new String(chars);
+          if (endWs.contains(v)) {
+            g.get(u).add(v);
           }
         }
       }
     }
-
-    return graph;
-  }
-
-  private boolean isNeighbor(String s1, String s2) {
-    if (s1.equals(s2)) {
-      return false;
-    }
-    int diffCnt = 0;
-    for (int i = 0; i < s1.length(); i++) {
-      if (s1.charAt(i) != s2.charAt(i)) {
-        diffCnt++;
-        if (diffCnt > 1) {
-          return false;
-        }
-      }
-    }
-    return true;
+    return g;
   }
 }
