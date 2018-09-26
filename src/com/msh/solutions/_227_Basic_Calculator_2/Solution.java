@@ -5,91 +5,76 @@ import java.util.Stack;
 /**
  * Created by monkeysayhi on 2018/1/30.
  */
-public class Solution {
+class Solution {
   // solution 1: 直接构建啥玩意树来着，加减号在第一层，乘除号在第二层，下面是操作数
   // 不过只有两层，用树有点杀鸡用牛刀了。可以仿照编译器一样用栈搞定
   // solution 2: 栈存储操作数，注意在读入加减号后，要检查下一个数后是否紧跟着乘除号
   public int calculate(String s) {
-    char[] chars = s.replace(" ", "").toCharArray();
-    Stack<Integer> numStack = new Stack<>();
-    Stack<Character> opStack = new Stack<>();
-    int i = 0;
-    while (i < chars.length) {
-      if (numStack.size() == 0) {
-        i += readVal(chars, i, numStack);
-        continue;
-      }
+    s = s.replace(" ", "");
+    if (s.startsWith("+") || s.startsWith("-")) {
+      s = "0" + s;
+    }
 
-      i += readOp(chars, i, opStack);
-      char op = opStack.peek();
-      i += readVal(chars, i, numStack);
+    String[] numStrs = s.split("\\+|-|\\*|/");
+    if (numStrs.length == 1) {
+      return Integer.valueOf(numStrs[0]);
+    }
+
+    int n = numStrs.length;
+    int[] nums = new int[n];
+    for (int i = 0; i < n; i++) {
+      nums[i] = Integer.valueOf(numStrs[i]);
+    }
+    char[] ops = new char[n];
+    for (int i = 1, j = 0; i < n; i++, j++) {
+      while (s.charAt(j) != '+' && s.charAt(j) != '-' && s.charAt(j) != '*' && s.charAt(j) != '/') {
+        j++;
+      }
+      ops[i] = s.charAt(j);
+    }
+
+    Stack<Integer> numStack = new Stack<>();
+    numStack.push(nums[0]);
+    int i = 1;
+    while (i < n) {
+      int num1 = numStack.pop();
+      int num2 = nums[i];
+      char op = ops[i];
+      int ans = 0;
       if (op == '+' || op == '-') {
-        while (i < chars.length) {
-          i += readOp(chars, i, opStack);
-          char nextOp = opStack.peek();
-          if (nextOp == '+' || nextOp == '-') {
-            i -= recoverOp(opStack);
-            break;
+        if (i + 1 < n && (ops[i + 1] == '*' || ops[i + 1] == '/')) {
+          char opBak = op;
+          numStack.push(num1);
+          numStack.push(nums[i]);
+          while (i + 1 < n && (ops[i + 1] == '*' || ops[i + 1] == '/')) {
+            i++;
+            num1 = numStack.pop();
+            num2 = nums[i];
+            op = ops[i];
+            ans = eval(num1, num2, op);
+            numStack.push(ans);
           }
-          i += readVal(chars, i, numStack);
-          cal(numStack, opStack);
+          num2 = numStack.pop();
+          num1 = numStack.pop();
+          op = opBak;
         }
       }
-      cal(numStack, opStack);
+      ans = eval(num1, num2, op);
+      numStack.push(ans);
+      i++;
     }
-    assert numStack.size() == 1 && opStack.size() == 0;
     return numStack.pop();
   }
 
-  private int readVal(char[] chars, int offset, Stack<Integer> numStack) {
-    int nextIntLen = nextIntLen(chars, offset);
-    Integer nextInt = Integer.valueOf(new String(chars, offset, nextIntLen));
-    numStack.push(nextInt);
-    return nextIntLen;
-  }
-
-  private int readOp(char[] chars, int offset, Stack<Character> opStack) {
-    opStack.push(chars[offset]);
-    return 1;
-  }
-
-  private int recoverOp(Stack<Character> opStack) {
-    opStack.pop();
-    return 1;
-  }
-
-  private void cal(Stack<Integer> numStack, Stack<Character> opStack) {
-    int v2 = numStack.pop();
-    int v1 = numStack.pop();
-    char op = opStack.pop();
-    int v = evalOp(v1, v2, op);
-    numStack.push(v);
-  }
-
-  private int nextIntLen(char[] chars, int offset) {
-    int i = offset;
-    for (; i < chars.length; i++) {
-      if (!Character.isDigit(chars[i])) {
-        break;
-      }
-    }
-    return i - offset;
-  }
-
-  private int evalOp(int v1, int v2, char op) {
-    if (op == '*') {
-      return v1 * v2;
-    }
-    if (op == '/') {
-      return v1 / v2;
-    }
+  private int eval(int num1, int num2, char op) {
     if (op == '+') {
-      return v1 + v2;
+      return num1 + num2;
+    } else if (op == '-') {
+      return num1 - num2;
+    } else if (op == '*') {
+      return num1 * num2;
+    } else { // op == '/'
+      return num1 / num2;
     }
-    if (op == '-') {
-      return v1 - v2;
-    }
-    assert true;
-    return -1;
   }
 }
