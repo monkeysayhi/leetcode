@@ -51,6 +51,7 @@ public class Solution {
         intBuf.append(ch);
         if (intBuf.length() == 1) {
           strStack.push(strBuf.toString());
+          // 将 strBuf 置为空串，以简化case
           strBuf = new StringBuilder();
         }
         continue;
