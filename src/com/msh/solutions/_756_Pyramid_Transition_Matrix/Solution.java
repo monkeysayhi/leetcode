@@ -8,65 +8,50 @@ import java.util.Set;
  * Created by monkeysayhi on 2018/9/23.
  */
 public class Solution {
-  // 深搜（回溯），求深度是否能达到 len(bottom)
+  private final static int M = 26;
+  // 回溯，逐层枚举
   public boolean pyramidTransition(String bottom, List<String> allowed) {
-    if (bottom == null || bottom.length() == 0) {
-      return true;
+    Set<Character>[][] es = new HashSet[M][M];
+    for (int i = 0; i < M; i++) {
+      for (int j = 0; j < M; j++) {
+        es[i][j] = new HashSet<>();
+      }
     }
-    if (bottom.length() == 1) {
-      return true;
+    for (String s : allowed) {
+      char a = s.charAt(0);
+      char b = s.charAt(1);
+      char c = s.charAt(2);
+      es[a - 'A'][b - 'A'].add(c);
     }
-    if (allowed == null || allowed.size() == 0) {
-      return false;
+    int n = bottom.length();
+    char[][] buf = new char[n][n];
+    int curRow = n - 1;
+    for (int i = 0; i <= curRow; i++) {
+      buf[curRow][i] = bottom.charAt(i);
     }
-
-    Set<Character>[][] rules = new Set[26][26];
-    for (String rule : allowed) {
-      char[] s = rule.toCharArray();
-      addRule(rules, s[0], s[1], s[2]);
-    }
-
-    int totalLvl = bottom.length();
-    char[][] buf = new char[totalLvl][totalLvl];
-    int lastLevel = totalLvl - 1;
-    for (int i = 0; i < bottom.length(); i++) {
-      buf[lastLevel][i] = bottom.charAt(i);
-    }
-    return backtrack(rules, buf, lastLevel, 0);
+    int curCol = 0;
+    return backtrack(es, curRow - 1, curCol, buf);
   }
 
-  private boolean backtrack(Set<Character>[][] rules, char[][] buf,
-                            int lastLevel, int cur) {
-    if (lastLevel == 0) {
+  private boolean backtrack(Set<Character>[][] es, int curRow, int curCol, char[][] buf) {
+    if (curRow == -1) {
       return true;
     }
-    if (cur == lastLevel) {
-      return backtrack(rules, buf, lastLevel - 1, 0);
-    }
-
-    Set<Character> chars = getRules(rules, buf[lastLevel][cur], buf[lastLevel][cur + 1]);
-    for (char c : chars) {
-      buf[lastLevel - 1][cur] = c;
-      if (backtrack(rules, buf, lastLevel, cur + 1)) {
+    assert curCol <= curRow;
+    char a = buf[curRow + 1][curCol];
+    char b = buf[curRow + 1][curCol + 1];
+    for (char c : es[a - 'A'][b - 'A']) {
+      buf[curRow][curCol] = c;
+      boolean can = false;
+      if (curCol < curRow) {
+        can = backtrack(es, curRow, curCol + 1, buf);
+      } else {
+        can = backtrack(es, curRow - 1, 0, buf);
+      }
+      if (can) {
         return true;
       }
     }
     return false;
-  }
-
-  private Set<Character> getRules(Set<Character>[][] rules,
-                                  char c1, char c2) {
-    if (rules[c1 - 'A'][c2 - 'A'] == null) {
-      return new HashSet<>();
-    }
-    return rules[c1 - 'A'][c2 - 'A'];
-  }
-
-  private void addRule(Set<Character>[][] rules,
-                       char c1, char c2, char c) {
-    if (rules[c1 - 'A'][c2 - 'A'] == null) {
-      rules[c1 - 'A'][c2 - 'A'] = new HashSet<>();
-    }
-    rules[c1 - 'A'][c2 - 'A'].add(c);
   }
 }
